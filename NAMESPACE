@@ -1,0 +1,8 @@
+useDynLib(ClusterStability);
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp);
+import(clusterCrit);
+import(cluster);
+import(WeightedCluster);
+importFrom("stats", "dist", "kmeans")
+
