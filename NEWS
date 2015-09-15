@@ -1,0 +1,10 @@
+NEWS/ChangeLog for ClusterStability 1.0.1 (15-09-2015)
+-------------------------------------------------------------------------
+
+FIXES
+
+* Corrected the inclusion of a wrong Makevars version in the src directory 
+  which corrupted the package on some platforms.
+
+
+

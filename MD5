@@ -1,8 +1,9 @@
-19d47ee16f87d1f2a8028f2201acff47 *DESCRIPTION
+c01531ac0a103fd20afc865ba467ead2 *DESCRIPTION
 da63f4fb4af0cfaabded74d6c0be8f8f *NAMESPACE
+467abceeb29f086f7032c7386008f5f8 *NEWS
 a1226ec2278016cc0c93ca341ffaddb4 *R/ClusterStability.R
 2779c544de5b0e11bf0ccc384bea2c2a *R/RcppExports.R
-322efc87a2921b4420d7392da540964f *man/ClusterStability-package.Rd
+aa213b6d4971d3e6a88594269ed99131 *man/ClusterStability-package.Rd
 00b5dd0631209701fee3e2f6f108e956 *man/ClusterStability.Rd
 474e73acd286ebd6705e5e79d49e3ae4 *man/ClusterStability_exact.Rd
 e1c644efc1dad92a44c5844a02a364b2 *man/Kcombination.Rd
@@ -10,5 +11,4 @@ e1c644efc1dad92a44c5844a02a364b2 *man/Kcombination.Rd
 a81fb9bad4fdecdef2c076d1502b63a5 *man/Stirling2nd.Rd
 8b5f370db53bbdf1b12ab43f1336b392 *man/undocumented.Rd
 83fa5ddd2d46de6b1407ee30948cd976 *src/ClusterStability.cpp
-bae449f2ac77ecce890407e3788875cd *src/Makevars
 9b5ffeadf38b7bd491060a407f54cdec *src/RcppExports.cpp
