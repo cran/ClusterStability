@@ -1,11 +1,11 @@
-c01531ac0a103fd20afc865ba467ead2 *DESCRIPTION
+f4e25b20cc5c610edecdcd6a762cebf4 *DESCRIPTION
 da63f4fb4af0cfaabded74d6c0be8f8f *NAMESPACE
-467abceeb29f086f7032c7386008f5f8 *NEWS
-a1226ec2278016cc0c93ca341ffaddb4 *R/ClusterStability.R
+7042c1eee467d44c82cd418df8400de8 *NEWS
+ea84d43a0b446c737cba835a0c16fd3a *R/ClusterStability.R
 2779c544de5b0e11bf0ccc384bea2c2a *R/RcppExports.R
-aa213b6d4971d3e6a88594269ed99131 *man/ClusterStability-package.Rd
-00b5dd0631209701fee3e2f6f108e956 *man/ClusterStability.Rd
-474e73acd286ebd6705e5e79d49e3ae4 *man/ClusterStability_exact.Rd
+fcc0c5dbf7ca8fce3553750793a640b5 *man/ClusterStability-package.Rd
+0e5c86d31d043e676db7ecf11cd5a1b8 *man/ClusterStability.Rd
+bcd808fa2dc3565f62072dbc2bb605c8 *man/ClusterStability_exact.Rd
 e1c644efc1dad92a44c5844a02a364b2 *man/Kcombination.Rd
 39853334535a3e14ad10f2405fc975b5 *man/Reorder.Rd
 a81fb9bad4fdecdef2c076d1502b63a5 *man/Stirling2nd.Rd

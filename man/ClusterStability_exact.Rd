@@ -7,7 +7,7 @@
 \arguments{
 	\item{dat}{the input dataset: either a matrix or a dataframe.}
     \item{k}{the number of classes for the K-means or K-medoids algorithm (default=3).}
-    \item{replicate}{the number of replicates to perform (default=100).}
+    \item{replicate}{the number of replicates to perform (default=1000).}
 	\item{type}{the algorithm used in the partitioning: either 'kmeans' or 'kmedoids' algorithm (default=kmeans).}
 }
 
@@ -15,7 +15,7 @@
 
 \examples{
    ## Calculate the stability scores of individual objects of the Iris dataset
-   ## using K-means, 100 replicates and k=3
+   ## using K-means, 100 replicates (random starts) and k=3
    ClusterStability_exact(dat=iris[1:4],k=3,replicate=100,type='kmeans');
 }
 

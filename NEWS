@@ -1,3 +1,9 @@
+NEWS/ChangeLog for ClusterStability 1.0.2 (14-10-2015)
+
+FIXES
+
+* Changed the default number of replicates from 100 to 1000.
+
 NEWS/ChangeLog for ClusterStability 1.0.1 (15-09-2015)
 -------------------------------------------------------------------------
 

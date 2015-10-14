@@ -77,7 +77,7 @@ calculate_singleton<-function(indices, partition, indice, total_indice) {
 
 
 #Main ClusterStability function (approximative)
-ClusterStability<-function(dat, k=3, replicate=100, type='kmeans') {
+ClusterStability<-function(dat, k=3, replicate=1000, type='kmeans') {
 	
 	mylist<-list();
 	dat=as.matrix(dat);
@@ -160,7 +160,7 @@ ClusterStability<-function(dat, k=3, replicate=100, type='kmeans') {
 }
 
 #Main ClusterStability function (exact)
-ClusterStability_exact<-function(dat, k=3, replicate=100, type='kmeans') {
+ClusterStability_exact<-function(dat, k=3, replicate=1000, type='kmeans') {
 	
 	mylist<-list();
 	dat=as.matrix(dat);

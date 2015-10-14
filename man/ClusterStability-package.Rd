@@ -15,8 +15,8 @@
 	\tabular{ll}{
 		Package: \tab ClusterStability\cr
 		Type: \tab Package\cr
-		Version: \tab 1.0.0\cr
-		Date: \tab 2015-09-15\cr
+		Version: \tab 1.0.2\cr
+		Date: \tab 2015-10-14\cr
 		License: \tab GPL-2\cr
 		Maintainer: \tab Etienne Lord <m.etienne.lord@gmail.com>, \cr \tab Vladimir Makarenkov <makarenkov.vladimir@uqam.ca>
 	}
