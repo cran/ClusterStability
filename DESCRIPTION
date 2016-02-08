@@ -1,17 +1,21 @@
 Package: ClusterStability
 Type: Package
-Depends: R (>= 2.2.4), Rcpp, clusterCrit, cluster, WeightedCluster
+Depends: R (>= 2.2.4), Rcpp, clusterCrit, cluster, copula (>= 0.999),
+        WeightedCluster
 LinkingTo: Rcpp
 Title: Assessment of Stability of Individual Objects or Clusters in
         Partitioning Solutions
-Version: 1.0.2
-Date: 2015-10-14
-Author: Etienne Lord, Francois-Joseph Lapointe, and Vladimir Makarenkov
+Version: 1.0.3
+Date: 2016-02-08
+Author: Etienne Lord, Matthieu Willems, Francois-Joseph Lapointe, and Vladimir
+    Makarenkov
 Maintainer: Etienne Lord <m.etienne.lord@gmail.com>
-Description: Allows one to assess the stability of individual objects, clusters and whole clustering solutions based on repeated runs of the K-means and K-medoids partitioning algorithms. 
+Description: Allows one to assess the stability of individual objects, clusters 
+    and whole clustering solutions based on repeated runs of the K-means and K-medoids 
+    partitioning algorithms.
 License: GPL-3
 LazyLoad: yes
-Packaged: 2015-10-14 19:10:36 UTC; lorde
 NeedsCompilation: yes
+Packaged: 2016-02-08 19:02:06 UTC; etienne
 Repository: CRAN
-Date/Publication: 2015-10-14 23:41:33
+Date/Publication: 2016-02-08 23:52:27

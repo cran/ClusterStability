@@ -1,36 +1,41 @@
 #
 # Functions for ClusterStability
-# Authors: Etienne Lord, Vladimir Makarenkov
+# Authors: Etienne Lord, Matthieu Willems, Vladimir Makarenkov
 # Since: December 2015-July 2015
 #
 
 # Function to return the Stirling numbers of the second kind
 Stirling2nd<-function(n,k) {
-total=0;
-somme=0;
-for (j in 0:k) {
-	tt=(-1)^(k-j)*choose(k,j)*j^n;
-	somme=somme+tt;
-}
-total=(1/factorial(k))*somme;
-return(total)
+	total=0;
+	somme=0;
+	for (j in 0:k) {
+		
+		tt=(-1)^(k-j)*choose(k,j)*j^n;
+		somme=somme+tt;
+	}
+	total=(1/factorial(k))*somme;
+	return(total)
 }
 
 # Internal function to return the p_n_k probability
+# Note: Now use the recurence version from the R copula package
+# to calculate the Stirling numbers of the second kind
 p_n_k<-function(n,k) {
-	no=Stirling2nd(n-1,k);
-	de=Stirling2nd(n,k);
+	no=copula::Stirling2(n-1,k);
+	de=copula::Stirling2(n,k);
 	node=no/de;
-	if (is.na(node)) return (1/k);
+	if (is.na(node)||is.infinite(node)) return (1/k);
 	return (node);
 }
 
 # Internal function to return the p_t_n_k probability
+# Note: Now use the recurence version from the R copula package
+# to calculate the Stirling numbers of the second kind
 p_tilde_n_k<-function(n,k){
-	no=Stirling2nd(n-1,k-1);
-	de=Stirling2nd(n,k);
+	no=copula::Stirling2(n-1,k-1);
+	de=copula::Stirling2(n,k);
 	node=no/de;
-	if (is.na(node)) return (0);
+	if (is.na(node)||is.infinite(node)) return (0);
 	return (node);
 }
 
@@ -225,7 +230,7 @@ ClusterStability_exact<-function(dat, k=3, replicate=1000, type='kmeans') {
 	
 	#k, r_combinations, total_indices, indices
 	#Warning message 
-	if (is.na(Stirling2nd(nrow(dat), k))) {
+	if (is.na(Stirling2(nrow(dat), k))||is.infinite(Stirling2(nrow(dat), k))) {
 		msg<-paste("Warning, the current values of (n=",nrow(dat),") and (k=",k,") are greater than the supported values for this function. The use of its approximate version 'ClusterStability' is recommended in this case.");
 		warning(msg)
 	}

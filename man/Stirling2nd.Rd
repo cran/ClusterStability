@@ -2,7 +2,7 @@
 \name{Stirling2nd}
 \alias{Stirling2nd}
 \title{Stirling2nd function computes the Stirling numbers of the second kind.}
-\description{This function returns the Stirling numbers of the second kind \emph{i.e.}, the number of ways of partitioning a set of \emph{n} objects into \emph{k} nonempty groups.}
+\description{This function returns the estimated Stirling numbers of the second kind \emph{i.e.}, the number of ways of partitioning a set of \emph{n} objects into \emph{k} nonempty groups.}
 \usage{Stirling2nd(n,k)}
 \arguments{
 	\item{n}{number of objects.}
