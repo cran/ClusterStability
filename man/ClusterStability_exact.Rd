@@ -1,4 +1,4 @@
-\encoding{ISO-8859-2}
+\encoding{UTF-8}
 \name{ClusterStability_exact}
 \alias{ClusterStability_exact}
 \title{Calculates the exact stability score (\emph{ST}) for individual objects in a clustering solution.}
@@ -19,5 +19,5 @@
    ClusterStability_exact(dat=iris[1:4],k=3,replicate=100,type='kmeans');
 }
 
-\keyword{Stability score,ST,individual,global,exact}
+%\keyword{Stability score,ST,individual,global,exact}
 

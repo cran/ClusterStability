@@ -1,7 +1,6 @@
 useDynLib(ClusterStability);
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp);
-import(clusterCrit);
 import(copula);
 import(cluster);
 import(WeightedCluster);

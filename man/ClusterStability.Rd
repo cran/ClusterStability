@@ -1,4 +1,4 @@
-\encoding{ISO-8859-2}
+\encoding{UTF-8}
 \name{ClusterStability}
 \alias{ClusterStability}
 \title{Calculates the approximate stability score (\emph{ST}) of individual objects in a clustering solution (the approximate version allowing one to avoid possible variable overflow errors).}
@@ -21,5 +21,5 @@
    ClusterStability(dat=iris[1:4],k=3,replicate=100,type='kmeans');
 }
 
-\keyword{Stability score,ST,individual,global,approximative}
+%\keyword{Stability score,ST,individual,global,approximative}
 

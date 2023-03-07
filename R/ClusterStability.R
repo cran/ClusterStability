@@ -2,7 +2,7 @@
 # Functions for ClusterStability
 # Authors: Etienne Lord, Matthieu Willems, Vladimir Makarenkov
 # Since: December 2015-July 2015
-#
+# Changed: 7 March 2023
 
 # Function to return the Stirling numbers of the second kind
 Stirling2nd<-function(n,k) {
@@ -80,6 +80,86 @@ calculate_singleton<-function(indices, partition, indice, total_indice) {
 	return (total_singleton);
 }
 
+# Calculate the Calinski Harabasz score
+# See: T. Calinski and J. Harabasz. A dendrite method for cluster analysis. Communications in Statistics,3,no.1:1-27,1974
+# Based on the SciKit-lean implementation
+# https://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabasz_score.html
+calinski_harabasz_score <- function(X, labels) {
+  # Data dimension
+  n_samples <- nrow(X)
+  n_features <- ncol(X)
+  n_labels <- length(unique(labels))
+  # Calculate the  intra-cluster and extra-cluster dispersion
+  extra_disp <- 0
+  intra_disp <- 0
+  mean <- colMeans(X)
+  for (k in unique(labels)) {
+    cluster_k <- X[labels == k, ]
+    mean_k <- colMeans(cluster_k)
+    extra_disp <- extra_disp + nrow(cluster_k) * sum((mean_k - mean) ^ 2)
+    colsub=(apply(cluster_k, 1, function(x) x-mean_k))
+    intra_disp <- intra_disp + sum(colSums(colsub ^ 2))
+  }
+  # Calculate Calinski-Harabasz final score
+  if (intra_disp == 0) {
+    score <- 1
+  } else {
+    score <- extra_disp * (n_samples - n_labels) / (intra_disp * (n_labels - 1))
+  }
+  return(score)
+}
+
+# Calculate the Davies Bouldin score
+# See: D. L. Davies and D. W. Bouldin. A cluster separation measure. 
+#      IEEE Transactions on Pattern Analysis and Machine Intelligence, PAMI-1,no.2:224-227,1979
+# Based on the SciKit-lean implementation
+# https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html
+davies_bouldin_score <- function(X, labels) {
+  # Data dimension and distance function
+  n_labels <- length(unique(labels))
+  euclidean_dist <- function(X, Y) sqrt(sum((X - Y)^2))
+  # Calculate centroids and intra-cluster distances
+  centroids <- matrix(0, nrow=n_labels, ncol=ncol(X))
+  intra_dists <- numeric(n_labels)
+  for (k in unique(labels)) {
+    cluster_k <- X[labels == k, ]
+    centroid <- apply(cluster_k, 2, mean)
+    centroids[k, ] <- centroid
+    intra_dists[k] <- mean(apply(cluster_k,1,function(x) euclidean_dist(x,Y=centroid)))
+  }
+
+  # Calculate between centroid distances and similarity ratios
+  centroid_distances <- as.matrix(dist(centroids, method="euclidean",upper = T))
+  if (all(intra_dists == 0) || all(centroid_distances == 0)) {
+    return(0.0)
+  }
+  centroid_distances[centroid_distances == 0] <- Inf
+  combined_intra_dists <- outer(intra_dists, intra_dists, "+")
+  similarity_ratios <- apply(combined_intra_dists/centroid_distances,1,max)
+  
+  return(mean(similarity_ratios))
+}
+
+# Calculate the Dunn score
+# See:  J. Dunn. Well separated clusters and optimal fuzzy partitions. Journal of Cybernetics,4:95-104,1974.
+dunn_score <- function(X, labels) {
+   # Data dimension and local variables
+  n_labels <- length(unique(labels))
+  n_cluster <- unique(labels)
+  dmin=Inf;
+  dmax=0;
+  #Calculate the min and max distance of each points in the dataset
+  point_dist=as.matrix(dist(X,method="euclidean",upper = T))
+  for (i in 1:(n_labels-1)) {
+     for ( j in (i+1):n_labels) {
+       tmin=min(point_dist[labels == i,labels == j ])
+       if (tmin<dmin) dmin <- tmin
+       tmax=max(point_dist[labels == i,labels == i],point_dist[labels == j,labels == j])
+       if (tmax>dmax) dmax <- tmax
+     }
+  }
+  return (dmin/dmax)
+}
 
 #Main ClusterStability function (approximative)
 ClusterStability<-function(dat, k=3, replicate=1000, type='kmeans') {
@@ -103,15 +183,18 @@ ClusterStability<-function(dat, k=3, replicate=1000, type='kmeans') {
 	
 	for (i in 1:replicate) {
 		if (type=='kmeans') {
-			cluster<-Reorder(kmeans(dat,centers=k, nstart=1, iter.max=100, algorithm="MacQueen")$cluster);
+			cluster<-Reorder(kmeans(dat,centers=k, nstart=1, iter.max=100, algorithm="MacQueen")$cluster)
 		} else {		
-			cluster<-Reorder(wcKMedoids(dist(dat),k,npass=0,cluster.only=TRUE));		
-		}		
-		indice_kmeans<-intCriteria(dat, cluster,c("Calinski_Harabasz","Dunn","Davies_Bouldin"))	
-		total_calinski_harabasz<-total_calinski_harabasz+indice_kmeans[1]$calinski_harabasz;	
-		total_dunn<-total_dunn+indice_kmeans[2]$dunn;	
-		total_db<-total_db+indice_kmeans[3]$davies_bouldin;			
-		ind<-summary(silhouette(cluster,dist(dat)))$avg.width;			
+			cluster<-Reorder(wcKMedoids(dist(dat),k,npass=0,cluster.only=TRUE))		
+		}
+		indice_calinski_harabasz <- calinski_harabasz_score(dat,cluster)
+        indice_dunn <- dunn_score(dat,cluster)
+        indice_davies_bouldin <- davies_bouldin_score(dat,cluster)
+        
+		total_calinski_harabasz <- total_calinski_harabasz + indice_calinski_harabasz	
+		total_dunn              <- total_dunn + indice_dunn	
+		total_db                <- total_db + indice_davies_bouldin			
+		ind                     <-summary(silhouette(cluster,dist(dat)))$avg.width;			
 		if (is.nan(ind)) { 
 			ind=0.0;			
 		} else if (ind<0) {
@@ -120,10 +203,10 @@ ClusterStability<-function(dat, k=3, replicate=1000, type='kmeans') {
 		set.seed(starts[i])
 		total_silhouette<-total_silhouette+ind;				
 		partitions[[i]]<-as.vector(cluster);
-		indice_list_ch[i]<-indice_kmeans[1]$calinski_harabasz;
+		indice_list_ch[i]<-indice_calinski_harabasz;
 		indice_list_sil[i]<-ind;		
-		indice_list_db[i]<-indice_kmeans[3]$davies_bouldin;	
-		indice_list_dunn[i]<-indice_kmeans[2]$dunn;
+		indice_list_db[i]<-indice_davies_bouldin;	
+		indice_list_dunn[i]<-indice_dunn;
 		
 	}
 	
@@ -185,27 +268,30 @@ ClusterStability_exact<-function(dat, k=3, replicate=1000, type='kmeans') {
 	total_db=0;
 	for (i in 1:replicate) {
 		if (type=='kmeans') {
-			cluster<-Reorder(kmeans(dat,centers=k, nstart=1, iter.max=100, algorithm="MacQueen")$cluster);
+			cluster<-Reorder(kmeans(dat,centers=k, nstart=1, iter.max=100, algorithm="MacQueen")$cluster)
 		} else {		
-			cluster<-Reorder(wcKMedoids(dist(dat),k,npass=0,cluster.only=TRUE));		
+			cluster<-Reorder(wcKMedoids(dist(dat),k,npass=0,cluster.only=TRUE))		
 		}		
-		indice_kmeans<-intCriteria(dat, cluster,c("Calinski_Harabasz","Dunn","Davies_Bouldin"))	
-		total_calinski_harabasz<-total_calinski_harabasz+indice_kmeans[1]$calinski_harabasz;	
-		total_dunn<-total_dunn+indice_kmeans[2]$dunn;	
-		total_db<-total_db+indice_kmeans[3]$davies_bouldin;			
-		ind<-summary(silhouette(cluster,dist(dat)))$avg.width;			
+		indice_calinski_harabasz <- calinski_harabasz_score(dat,cluster)
+        indice_dunn <- dunn_score(dat,cluster)
+        indice_davies_bouldin <- davies_bouldin_score(dat,cluster)
+        
+        total_calinski_harabasz <- total_calinski_harabasz+indice_calinski_harabasz	
+		total_dunn              <- total_dunn + indice_dunn	
+		total_db                <- total_db + indice_davies_bouldin				
+		ind                     <-summary(silhouette(cluster,dist(dat)))$avg.width		
 		if (is.nan(ind)) { 
-			ind=0.0;			
+			ind <- 0.0			
 		} else if (ind<0) {
-			ind=(ind+1)/2;
+			ind <- (ind+1)/2
 		}
 		set.seed(starts[i])
-		total_silhouette<-total_silhouette+ind;				
-		partitions[[i]]<-as.vector(cluster);
-		indice_list_ch[i]<-indice_kmeans[1]$calinski_harabasz;
+		total_silhouette<-total_silhouette + ind				
+		partitions[[i]]<-as.vector(cluster)
+		indice_list_ch[i]<-indice_calinski_harabasz
 		indice_list_sil[i]<-ind;		
-		indice_list_db[i]<-indice_kmeans[3]$davies_bouldin;	
-		indice_list_dunn[i]<-indice_kmeans[2]$dunn;
+		indice_list_db[i]<- indice_davies_bouldin
+		indice_list_dunn[i]<- indice_dunn
 		
 	}
 	r<-list("partition"=partitions, "calinski_harabasz"=indice_list_ch, "silhouette"=indice_list_sil,"total_calinski_harabasz"=total_calinski_harabasz, "total_silhouette"=total_silhouette, "dunn"=indice_list_dunn, "db"=indice_list_db,"total_dunn"=total_dunn, "total_db"=total_db);
